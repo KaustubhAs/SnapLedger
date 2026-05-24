@@ -1,57 +1,54 @@
-# 🧾✂️ SnapFair
-<img width="1920" height="1080" alt="Képernyőkép 2026-03-05 002309" src="https://github.com/user-attachments/assets/db675ef5-f3f5-4ab7-8277-66bedcf6fe7c" />
+# 📓 SnapLedger
 
-**Scan a bill. Split it fairly. No app needed.**
+[![Netlify Status](https://api.netlify.com/api/v1/badges/71fc9006-0bd8-440c-b9d4-bf8e3359a968/deploy-status)](https://app.netlify.com/projects/snapledger-finance/deploys)
+[![PWA Ready](https://img.shields.io/badge/PWA-Ready-blue_violet?logo=pwa)](https://snapledger-finance.netlify.app/)
 
-SnapFair is a free, browser-based bill-splitting tool. Just snap a photo of your receipt (or upload one), assign items to people, and get a fair split — including tax and tip. No downloads, no signups, no hassle.
+**Scan receipts. Track your spending. Split bills seamlessly.**
+
+SnapLedger is a modern, serverless Progressive Web App (PWA) that serves as your all-in-one financial companion. Whether you are tracking your personal monthly expenses in a secure, cloud-synced dashboard or splitting a complex dinner bill with friends, SnapLedger handles the math for you. No downloads required.
 
 ---
 
 ## ✨ Features
 
-- 📸 **Scan with Camera** — Use your phone camera to capture a receipt instantly
-- 🖼️ **Upload a Photo** — Pick a receipt image from your gallery
-- ✏️ **Manual Entry** — Type in items by hand if you prefer
-- 🤖 **AI-Powered OCR** — Automatically reads item names and prices from your receipt
-- 👥 **Add People** — Add everyone at the table
-- 🍽️ **Assign Items** — Tap to assign who had what
-- 💰 **Tax & Tip** — Automatically splits tax and tip proportionally
-- 💳 **Payment Links** — Generate Venmo, PayPal, and Cash App request links
-- 📤 **Share** — Send the split to your friends via share or copy-to-clipboard
-- 🌙 **Dark Mode** — Automatically matches your system preference
-- 📱 **Mobile First** — Designed for phones, works on any device
-- 🔒 **Private** — Everything runs in your browser. No data is sent to any server
+### 📊 Personal Finance Tracking
+- **Google Authentication** — Securely log in to lock down your personal data.
+- **Cloud Sync** — Powered by Firebase Firestore. Access your expense dashboard from any device.
+- **Smart Categorization** — Tag receipts (Groceries, Dining, Gas, etc.) to track your spending habits.
+- **Enterprise-Grade Security** — Strict database rules ensure only *you* can read or write your data.
+
+### ✂️ Group Bill Splitting
+- **AI-Powered OCR** — Automatically reads item names and prices directly from your receipt.
+- **Proportional Math** — Accurately distributes tax and tip based on what each person ordered.
+- **Payment Links** — Generate one-tap Venmo, PayPal, and Cash App request links.
+- **Frictionless Sharing** — Send the final split to your friends via text or copy-to-clipboard.
+
+### 📱 Built for the Modern Web
+- **Installable PWA** — Add it to your iOS or Android home screen for a native app experience.
+- **Mobile-First Design** — Fluid, responsive UI that works beautifully on any screen size.
+- **Dark Mode** — Automatically matches your system preferences to save your eyes (and battery).
 
 ---
 
-## ☕ Support
-
-If SnapFair helped you, consider buying me a coffee!
-
-[![ko-fi](https://ko-fi.com/img/githubbutton_sm.svg)](https://ko-fi.com/tombuildsstuff)
-
 ## 🚀 How It Works
 
-<img width="1920" height="1080" alt="Képernyőkép 2026-03-05 002309" src="https://github.com/user-attachments/assets/db675ef5-f3f5-4ab7-8277-66bedcf6fe7c" />
-1. 📸 Scan or upload a photo of your bill
+### Flow 1: Track Your Own Spending
+1. **Log In:** Authenticate with Google to access your private dashboard.
+2. **Scan:** Snap a photo of your receipt or enter the total manually.
+3. **Save:** Categorize the expense and instantly sync it to your cloud database.
 
-<img width="1920" height="1080" alt="Képernyőkép 2026-03-05 002458" src="https://github.com/user-attachments/assets/7f721673-7fd5-493d-b307-7d0c61785b4c" />
-2. 📝 Review and edit the detected items
+### Flow 2: Split a Bill with Friends
+1. 📸 **Scan:** Upload a photo of your bill or use your camera.
+2. 📝 **Review:** Edit the AI-detected items and prices if needed.
+3. 👥 **Add People:** Enter the names of everyone splitting the bill.
+4. 🍽️ **Assign:** Tap to assign who had what.
+5. 💰 **Tax & Tip:** Let SnapLedger calculate the proportional tax and tip for each person.
+6. 📤 **Share:** Send the final split or pay instantly via direct payment links.
 
-<img width="1920" height="1080" alt="Képernyőkép 2026-03-05 002550" src="https://github.com/user-attachments/assets/07102714-9b0d-400c-a154-ceb5370f852e" />
+---
 
-3. 👥 Add the people splitting the bill
-
-<img width="1920" height="1080" alt="Képernyőkép 2026-03-05 002629" src="https://github.com/user-attachments/assets/162dd59f-27f9-4a2a-adc7-1d604618da7f" />
-
-4. 🍽️ Tap to assign who had what
-
-<img width="1920" height="1080" alt="Képernyőkép 2026-03-05 002734" src="https://github.com/user-attachments/assets/18f27981-0ca7-4854-8163-a455c2b37eba" />
-
-5. 💰 Set tax & tip
-
-<img width="1920" height="1080" alt="Képernyőkép 2026-03-05 002810" src="https://github.com/user-attachments/assets/8499cf8b-5239-442a-9017-05ebfce3d3ab" />
-<img width="1920" height="1080" alt="Képernyőkép 2026-03-05 002822" src="https://github.com/user-attachments/assets/768fdb15-612b-4f43-9b87-ebcb69d1e605" />
-
-
-6. 📤 Share the fair split/pay on a given platform that is available on the site with redirect!
+## 🛠️ Tech Stack
+- **Frontend:** HTML5, CSS3, Vanilla JavaScript (ES Modules)
+- **Backend/Database:** Firebase v10 (Cloud Firestore)
+- **Authentication:** Firebase Auth (Google Provider)
+- **Hosting & CI/CD:** Netlify
