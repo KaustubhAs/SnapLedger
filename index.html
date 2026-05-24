@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+  <meta name="google-site-verification" content="_-NTtWxAetMw-EHXG6myfyptB4B5e8oAC7ainUXHGDk" />
+
+  <title>SnapLedger — Track Spending &amp; Split Bills | Free Receipt App</title>
+  <meta name="description" content="Scan receipts, track your spending, and split bills seamlessly. Free receipt scanner with personal finance dashboard and fair group bill splitting.">
+  <meta name="keywords" content="bill splitter, split the bill, receipt scanner, split restaurant bill, bill splitting app, split check, divide bill, receipt splitter, fair bill split, tip calculator, group dinner split">
+  <link rel="canonical" href="https://snapfair.pages.dev/">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="SnapLedger — Track Spending &amp; Split Bills">
+  <meta property="og:description" content="Scan receipts. Track your spending. Split bills seamlessly.">
+  <meta property="og:url" content="https://snapfair.pages.dev/">
+  <meta property="og:image" content="https://snapfair.pages.dev/og-image.png">
+  <meta property="og:image:width" content="1200">
+  <meta property="og:image:height" content="630">
+  <meta property="og:site_name" content="SnapLedger">
+
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="SnapLedger — Track Spending &amp; Split Bills">
+  <meta name="twitter:description" content="Scan receipts. Track your spending. Split bills seamlessly.">
+  <meta name="twitter:image" content="https://snapfair.pages.dev/og-image.png">
+
+  <meta name="theme-color" content="#059669">
+  <meta name="mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+  <meta name="apple-mobile-web-app-title" content="SnapLedger">
+  <link rel="manifest" href="/manifest.json">
+  <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>📓</text></svg>">
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org","@type":"WebApplication","name":"SnapLedger",
+    "headline":"Scan receipts. Track your spending. Split bills seamlessly.",
+    "description":"Free browser-based personal finance tracker and bill splitter with AI receipt scanning, expense dashboard, and QR payment sharing.",
+    "url":"https://snapfair.pages.dev","applicationCategory":"FinanceApplication","operatingSystem":"Any",
+    "offers":{"@type":"Offer","price":"0","priceCurrency":"USD"},
+    "featureList":["AI-powered receipt scanning","QR code escrow payment verification","Camera and photo upload support","Manual item entry","Proportional tax and tip splitting","Venmo, PayPal, Cash App, Revolut, and Wise payment links","Share and copy-to-clipboard","Dark mode","Mobile-first design","No signup required","Fully private — no data sent to servers"],
+    "screenshot":"https://snapfair.pages.dev/og-image.png",
+    "author":{"@type":"Person","name":"Tom"}
+  }
+  </script>
+
+  <script type="application/ld+json">
+  {
+    "@context":"https://schema.org","@type":"FAQPage",
+    "mainEntity":[
+      {"@type":"Question","name":"Is SnapLedger really free?","acceptedAnswer":{"@type":"Answer","text":"Yes, SnapLedger is completely free with no signup, no downloads, and no hidden fees."}},
+      {"@type":"Question","name":"Does SnapLedger store my receipt data?","acceptedAnswer":{"@type":"Answer","text":"No. Everything runs locally in your browser. No data is sent to any server."}},
+      {"@type":"Question","name":"How does the receipt scanning work?","acceptedAnswer":{"@type":"Answer","text":"SnapLedger uses AI-powered OCR with advanced image preprocessing to read item names and prices from receipt photos."}},
+      {"@type":"Question","name":"How does the escrow payment verification work?","acceptedAnswer":{"@type":"Answer","text":"Generate a QR code for each person's share. When they confirm payment, they receive a unique code. Enter that code to verify — all without any server."}},
+      {"@type":"Question","name":"Can I split tax and tip fairly?","acceptedAnswer":{"@type":"Answer","text":"Yes. SnapLedger splits tax and tip proportionally based on what each person ordered."}},
+      {"@type":"Question","name":"Do I need to download an app?","acceptedAnswer":{"@type":"Answer","text":"No. SnapLedger works entirely in your browser."}}
+    ]
+  }
+  </script>
+
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <link rel="stylesheet" href="/styles.css">
+</head>
+<body>
+
+  <!-- TOAST -->
+  <div id="toast" class="toast" aria-live="polite"></div>
+
+  <!-- PROGRESS DOTS -->
+  <div id="step-progress" class="step-progress hidden">
+    <div class="step-dots">
+      <span class="dot active" data-step="1">1</span>
+      <span class="dot-connector" data-after="1"></span>
+      <span class="dot" data-step="2">2</span>
+      <span class="dot-connector" data-after="2"></span>
+      <span class="dot" data-step="3">3</span>
+      <span class="dot-connector" data-after="3"></span>
+      <span class="dot" data-step="4">4</span>
+    </div>
+  </div>
+
+  <!-- ==================== HOME ==================== -->
+  <section id="screen-home" class="screen active">
+    <div class="hero">
+      <div class="logo">📓</div>
+      <h1>SnapLedger</h1>
+      <p class="tagline">Scan receipts. Track your spending. Split bills seamlessly.</p>
+    </div>
+    <div class="home-actions">
+      <button id="btn-scan" class="btn btn-primary btn-large">
+        <span class="btn-icon">📸</span> Scan Bill
+      </button>
+      <button id="btn-upload" class="btn btn-secondary btn-large">
+        <span class="btn-icon">🖼️</span> Upload Photo
+      </button>
+      <button id="btn-manual" class="btn btn-outline btn-large">
+        <span class="btn-icon">✏️</span> Enter Manually
+      </button>
+      <button class="btn btn-secondary btn-large" id="btn-view-dashboard">
+        <span class="btn-icon">📊</span> View Dashboard
+      </button>
+      <input type="file" id="file-input" accept="image/*" hidden>
+    </div>
+    <div class="home-auth" style="margin-top: 16px; text-align: center;">
+      <p id="user-greeting" style="margin: 0 0 8px 0; font-size: 14px; color: var(--text-muted);"></p>
+      <button class="btn btn-secondary" id="btn-login">Login with Google</button>
+      <button class="btn btn-secondary" id="btn-logout" style="display: none;">Logout</button>
+    </div>
+    <div class="home-footer">
+      <p>© 2026 Kaustubh. All rights reserved.</p>
+    </div>
+  </section>
+
+  <!-- ==================== CAMERA ==================== -->
+  <section id="screen-camera" class="screen">
+    <video id="camera-feed" autoplay playsinline></video>
+    <div class="camera-overlay">
+      <div class="scan-frame">
+        <div class="scan-corner tl"></div>
+        <div class="scan-corner tr"></div>
+        <div class="scan-corner bl"></div>
+        <div class="scan-corner br"></div>
+      </div>
+      <p class="scan-hint">Align receipt inside the frame</p>
+    </div>
+    <div class="camera-controls">
+      <button id="btn-camera-back" class="btn btn-icon-only">✕</button>
+      <button id="btn-capture" class="btn-capture" aria-label="Take photo">
+        <span class="capture-ring"></span>
+      </button>
+      <button id="btn-flip-camera" class="btn btn-icon-only">🔄</button>
+    </div>
+    <canvas id="capture-canvas" hidden></canvas>
+  </section>
+
+  <!-- ==================== PROCESSING ==================== -->
+  <section id="screen-processing" class="screen">
+    <div class="processing-content">
+      <div class="scanner-animation">
+        <div class="scan-line"></div>
+        <span class="scan-icon">🧾</span>
+      </div>
+      <h2 id="ocr-status">Reading your receipt…</h2>
+      <div class="progress-bar">
+        <div id="ocr-progress" class="progress-fill" style="width:0%"></div>
+      </div>
+      <p id="ocr-detail" class="text-muted">This may take a few seconds</p>
+    </div>
+  </section>
+
+  <!-- ==================== ROUTE FORK ==================== -->
+  <section id="screen-route" class="screen">
+    <div class="screen-header" style="text-align: center;">
+      <div class="logo" style="font-size: 48px; margin-bottom: 8px;">🧾🤖</div>
+      <h2>Receipt Scanned!</h2>
+      <p class="text-muted">What would you like to do with this receipt?</p>
+    </div>
+    <div class="card" style="margin-top: 10px;">
+      <button class="btn btn-primary btn-block" id="btn-route-personal" style="padding: 16px;">
+        <span class="btn-icon">💼</span> Add to Personal Finance
+      </button>
+      <button class="btn btn-secondary btn-block" id="btn-route-split" style="padding: 16px; margin-top: 8px;">
+        <span class="btn-icon">👥</span> Group Split
+      </button>
+    </div>
+  </section>
+
+  <!-- ==================== PERSONAL FINANCE REVIEW ==================== -->
+  <section id="screen-personal" class="screen">
+    <div class="screen-header">
+      <h2>💼 Personal Finance</h2>
+      <p class="text-muted">Review, categorize, and save your receipt details</p>
+    </div>
+    
+    <div class="card">
+      <div class="input-group">
+        <label for="personal-merchant">Merchant</label>
+        <input id="personal-merchant" type="text" class="input" placeholder="Merchant name">
+      </div>
+      
+      <div class="input-group">
+        <label for="personal-date">Date</label>
+        <input id="personal-date" type="date" class="input">
+      </div>
+
+      <div class="input-group">
+        <label>Items</label>
+        <div id="personal-items-list" style="display: flex; flex-direction: column; gap: 6px;">
+          <!-- Populated dynamically -->
+        </div>
+        <button class="btn btn-secondary btn-small" id="btn-personal-add-item" style="margin-top: 6px; align-self: flex-start;">+ Add Item</button>
+      </div>
+      
+      <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 12px;">
+        <div class="input-group">
+          <label for="personal-tax">Tax $</label>
+          <input id="personal-tax" type="number" step="0.01" min="0" class="input">
+        </div>
+        <div class="input-group">
+          <label for="personal-total">Final Amount $</label>
+          <input id="personal-total" type="number" step="0.01" min="0" class="input">
+        </div>
+      </div>
+
+      <div class="input-group">
+        <label for="personal-category">Category</label>
+        <select id="personal-category" class="input" style="appearance: none; background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2224%22 height=%2224%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236B7280%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><polyline points=%226 9 12 15 18 9%22></polyline></svg>'); background-repeat: no-repeat; background-position: right 12px center; background-size: 16px; padding-right: 40px;">
+          <!-- Populated dynamically -->
+        </select>
+      </div>
+    </div>
+    
+    <div class="screen-nav">
+      <button class="btn btn-outline" id="btn-personal-back">← Back</button>
+      <button class="btn btn-primary" id="btn-save-personal">Done</button>
+    </div>
+  </section>
+
+  <!-- ==================== DASHBOARD ==================== -->
+  <section id="screen-dashboard" class="screen">
+    <div class="screen-header" style="display: flex; justify-content: space-between; align-items: center; padding-top: 48px; margin-bottom: 20px;">
+      <div>
+        <h2 style="margin: 0;">📊 Dashboard</h2>
+        <p class="text-muted" style="margin: 4px 0 0 0;">View your saved expenses</p>
+      </div>
+      <button class="btn btn-secondary btn-small" id="btn-dashboard-back">Back</button>
+    </div>
+
+    <div class="card">
+      <div class="input-group">
+        <label for="dashboard-month">Select Month</label>
+        <select id="dashboard-month" class="input" style="appearance: none; background-image: url('data:image/svg+xml;utf8,<svg xmlns=%22http://www.w3.org/2000/svg%22 width=%2224%22 height=%2224%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%236B7280%22 stroke-width=%222%22 stroke-linecap=%22round%22 stroke-linejoin=%22round%22><polyline points=%226 9 12 15 18 9%22></polyline></svg>'); background-repeat: no-repeat; background-position: right 12px center; background-size: 16px; padding-right: 40px;">
+          <!-- Populated dynamically -->
+        </select>
+      </div>
+      <div style="text-align: center; padding: 12px 0 4px 0;">
+        <span style="font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px;">Total Spent</span>
+        <h2 id="dashboard-total" style="font-size: 36px; font-weight: 800; color: var(--primary-dark); margin-top: 4px; margin-bottom: 0;">$0.00</h2>
+      </div>
+    </div>
+
+    <div class="card" id="dashboard-chart-card">
+      <span style="font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; margin-bottom: 12px; display: block; text-align: center;">Expenses by Category</span>
+      <div style="position: relative; height: 220px; width: 100%; display: flex; justify-content: center; align-items: center;">
+        <canvas id="categoryChart" style="max-height: 100%; max-width: 100%;"></canvas>
+      </div>
+    </div>
+
+    <span style="font-size: 13px; font-weight: 600; color: var(--text-muted); text-transform: uppercase; letter-spacing: .5px; margin-top: 12px; margin-bottom: 8px; display: block;">Transactions</span>
+    <div id="dashboard-list" style="display: flex; flex-direction: column; gap: 12px; margin-bottom: 24px;">
+      <!-- Populated dynamically -->
+    </div>
+  </section>
+
+  <!-- ==================== ITEMS ==================== -->
+  <section id="screen-items" class="screen">
+    <div class="screen-header">
+      <h2>📝 Review Items</h2>
+      <p class="text-muted">Edit names or prices, remove mistakes</p>
+    </div>
+    <div id="items-list" class="items-list"></div>
+    <button id="btn-add-item" class="btn btn-outline btn-block">+ Add Item</button>
+    <div id="add-item-modal" class="modal hidden">
+      <div class="modal-content">
+        <h3>Add Item</h3>
+        <input id="new-item-name" type="text" placeholder="Item name" class="input">
+        <input id="new-item-price" type="number" step="0.01" min="0" placeholder="0.00" class="input">
+        <div class="modal-actions">
+          <button id="btn-cancel-item" class="btn btn-outline">Cancel</button>
+          <button id="btn-save-item" class="btn btn-primary">Add</button>
+        </div>
+      </div>
+    </div>
+    <div class="screen-nav">
+      <button id="btn-items-back" class="btn btn-outline">← Back</button>
+      <button id="btn-items-next" class="btn btn-primary">Add People →</button>
+    </div>
+  </section>
+
+  <!-- ==================== PEOPLE ==================== -->
+  <section id="screen-people" class="screen">
+    <div class="screen-header">
+      <h2>👥 Who's Splitting?</h2>
+      <p class="text-muted">Add everyone at the table</p>
+    </div>
+    <div id="people-list" class="people-list"></div>
+    <div class="add-person-row">
+      <input id="person-name-input" type="text" placeholder="Name" class="input" maxlength="20">
+      <button id="btn-add-person" class="btn btn-primary">+ Add</button>
+    </div>
+    <div id="saved-groups" class="saved-groups"></div>
+    <div id="quick-add" class="quick-add hidden">
+      <p class="text-muted small">Quick add:</p>
+      <div class="quick-chips" id="quick-chips"></div>
+    </div>
+    <div class="screen-nav">
+      <button id="btn-people-back" class="btn btn-outline">← Back</button>
+      <button id="btn-people-next" class="btn btn-primary" disabled>Assign Items →</button>
+    </div>
+  </section>
+
+  <!-- ==================== ASSIGN ==================== -->
+  <section id="screen-assign" class="screen">
+    <div class="screen-header">
+      <h2>🍽️ Who Had What?</h2>
+      <p class="text-muted">Tap people to assign each item</p>
+    </div>
+    <div id="assign-list" class="assign-list"></div>
+    <div class="screen-nav">
+      <button id="btn-assign-back" class="btn btn-outline">← Back</button>
+      <button id="btn-assign-next" class="btn btn-primary">See the Split →</button>
+    </div>
+  </section>
+
+  <!-- ==================== SUMMARY ==================== -->
+  <section id="screen-summary" class="screen">
+    <div class="screen-header">
+      <h2>💰 The Split</h2>
+    </div>
+    <div class="tax-tip-section">
+      <div class="tax-tip-row">
+        <div class="field">
+          <label for="tax-input">Tax $</label>
+          <input id="tax-input" type="number" step="0.01" min="0" value="0" class="input">
+        </div>
+        <div class="field">
+          <label>Tip</label>
+          <div class="tip-toggle">
+            <button class="tip-btn" data-tip="0">0%</button>
+            <button class="tip-btn" data-tip="10">10%</button>
+            <button class="tip-btn" data-tip="15">15%</button>
+            <button class="tip-btn" data-tip="18">18%</button>
+            <button class="tip-btn" data-tip="20">20%</button>
+            <button class="tip-btn" data-tip="custom">$</button>
+          </div>
+        </div>
+      </div>
+      <div id="custom-tip-row" class="field hidden">
+        <label for="custom-tip-input">Custom Tip $</label>
+        <input id="custom-tip-input" type="number" step="0.01" min="0" value="0" class="input">
+      </div>
+    </div>
+
+    <div class="payment-info-section">
+      <details>
+        <summary>💳 Your payment handle (for request links)</summary>
+        <div class="payment-fields">
+          <div class="payment-group-label">🌍 Global</div>
+          <div class="field"><label>PayPal.me/</label><input id="paypal-handle" type="text" placeholder="username" class="input"></div>
+          <div class="field"><label>Wise</label><input id="wise-handle" type="text" placeholder="username or link" class="input"></div>
+          <div class="payment-group-label">🇪🇺 Europe</div>
+          <div class="field"><label>Revolut revolut.me/</label><input id="revolut-handle" type="text" placeholder="username" class="input"></div>
+          <div class="payment-group-label">🇺🇸 US</div>
+          <div class="field"><label>Venmo @</label><input id="venmo-handle" type="text" placeholder="username" class="input"></div>
+          <div class="field"><label>Cash App $</label><input id="cashapp-handle" type="text" placeholder="cashtag" class="input"></div>
+          <div class="payment-group-label">🏦 Bank Transfer</div>
+          <div class="field"><label>Account holder</label><input id="bank-name-handle" type="text" placeholder="Your Name" class="input"></div>
+          <div class="field"><label>IBAN</label><input id="bank-iban-handle" type="text" placeholder="HU42 1234 ..." class="input"></div>
+        </div>
+      </details>
+    </div>
+
+    <div id="summary-list" class="summary-list"></div>
+
+    <div class="totals-check">
+      <div class="totals-row"><span>Subtotal</span><span id="check-subtotal">$0.00</span></div>
+      <div class="totals-row"><span>Tax</span><span id="check-tax">$0.00</span></div>
+      <div class="totals-row"><span>Tip</span><span id="check-tip">$0.00</span></div>
+      <div class="totals-row total"><span>Grand Total</span><span id="check-total">$0.00</span></div>
+    </div>
+
+    <div class="summary-actions">
+      <button id="btn-share" class="btn btn-primary btn-large btn-block">📤 Share Split</button>
+      <button id="btn-copy-summary" class="btn btn-secondary btn-block">📋 Copy as Text</button>
+      <button id="btn-summary-back" class="btn btn-outline btn-block">← Back to Assignments</button>
+      <button id="btn-new-split" class="btn btn-outline btn-block">🔄 New Split</button>
+    </div>
+
+    <div class="support-prompt">
+      <p>Enjoyed SnapLedger? It's free forever.</p>
+      <a href="https://ko-fi.com/tombuildsstuff" target="_blank" rel="noopener noreferrer" class="kofi-link">
+        <span class="kofi-icon">☕</span> Buy me a coffee
+      </a>
+    </div>
+  </section>
+
+  <!-- ==================== SHARED VIEW ==================== -->
+  <section id="screen-shared" class="screen">
+    <div class="screen-header">
+      <h2>💰 Your Split</h2>
+      <p class="text-muted">Someone shared a bill split with you</p>
+    </div>
+    <div id="shared-summary" class="summary-list"></div>
+    <div id="shared-totals" class="totals-check"></div>
+    <div class="summary-actions">
+      <button id="btn-shared-new" class="btn btn-primary btn-large btn-block">🧾 Split Your Own Bill</button>
+    </div>
+    <div class="support-prompt">
+      <p>Enjoyed SnapLedger? It's free forever.</p>
+      <a href="https://ko-fi.com/tombuildsstuff" target="_blank" rel="noopener noreferrer" class="kofi-link">
+        <span class="kofi-icon">☕</span> Buy me a coffee
+      </a>
+    </div>
+  </section>
+
+  <!-- ==================== PAYMENT REQUEST (payer view) ==================== -->
+  <section id="screen-pay-request" class="screen">
+    <div class="screen-header">
+      <h2>💳 Payment Request</h2>
+      <p class="text-muted">Someone is requesting payment</p>
+    </div>
+    <div id="pay-request-content"></div>
+    <div class="summary-actions" style="margin-top:20px">
+      <button id="btn-payreq-new" class="btn btn-primary btn-large btn-block">🧾 Split Your Own Bill</button>
+    </div>
+    <div class="support-prompt">
+      <p>Enjoyed SnapLedger? It's free forever.</p>
+      <a href="https://ko-fi.com/tombuildsstuff" target="_blank" rel="noopener noreferrer" class="kofi-link">
+        <span class="kofi-icon">☕</span> Buy me a coffee
+      </a>
+    </div>
+  </section>
+
+  <!-- ==================== ESCROW MODAL ==================== -->
+  <div id="escrow-modal" class="modal hidden">
+    <div class="modal-content escrow-modal-inner" id="escrow-modal-body"></div>
+  </div>
+
+  <!-- SCRIPTS -->
+  <script src="https://cdn.jsdelivr.net/npm/tesseract.js@5/dist/tesseract.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/qrious@4.0.2/dist/qrious.min.js"></script>
+  <script type="module" src="/app.js"></script>
+</body>
+</html>
