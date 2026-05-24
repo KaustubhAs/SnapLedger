@@ -1,6 +1,11 @@
 # 📓 SnapLedger
 
 [![Netlify Status](https://api.netlify.com/api/v1/badges/71fc9006-0bd8-440c-b9d4-bf8e3359a968/deploy-status)](https://app.netlify.com/projects/snapledger-finance/deploys)
+[![Live App](https://img.shields.io/badge/Live_App-snapledger--finance-success?logo=netlify)](https://snapledger-finance.netlify.app/)
+[![JavaScript](https://img.shields.io/badge/JavaScript-F7DF1E?logo=javascript&logoColor=black)](#)
+[![Firebase](https://img.shields.io/badge/Firebase-FFCA28?logo=firebase&logoColor=black)](#)
+[![HTML5](https://img.shields.io/badge/HTML5-E34F26?logo=html5&logoColor=white)](#)
+[![CSS3](https://img.shields.io/badge/CSS3-1572B6?logo=css3&logoColor=white)](#)
 [![PWA Ready](https://img.shields.io/badge/PWA-Ready-blue_violet?logo=pwa)](https://snapledger-finance.netlify.app/)
 
 **Scan receipts. Track your spending. Split bills seamlessly.**
