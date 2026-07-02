@@ -179,7 +179,7 @@ class SnapLedger {
     // Home
     this.$('#btn-scan').addEventListener('click', () => this.openCamera());
     this.$('#btn-upload').addEventListener('click', () => this.$('#file-input').click());
-    this.$('#btn-manual').addEventListener('click', () => this.startManual());
+    this.$('#btn-manual').addEventListener('click', () => this.showRouteFork({ resetAll: true }));
     this.$('#file-input').addEventListener('change', e => this.handleFileUpload(e));
 
     // Camera
@@ -255,7 +255,7 @@ class SnapLedger {
     // Fork & Personal Finance Actions
     this.$('#btn-route-split').addEventListener('click', () => {
       this.vibrate(10);
-      this.showScreen('items', 1);
+      this.startManual();
     });
 
     this.$('#btn-route-personal').addEventListener('click', () => {
@@ -536,7 +536,7 @@ class SnapLedger {
 
       if (this.items.length === 0) {
         this.toast('No items found — try manual entry or better lighting', 'warning', 4000);
-        this.startManual();
+        this.showRouteFork();
         return;
       }
 
@@ -547,7 +547,7 @@ class SnapLedger {
     } catch (err) {
       console.error('OCR Error:', err);
       this.toast('OCR failed — entering manual mode', 'error');
-      this.startManual();
+      this.showRouteFork({ resetAll: true });
     }
   }
 
@@ -697,11 +697,31 @@ class SnapLedger {
   //  MANUAL ENTRY
   // ═══════════════════════════════════════
 
+  getTodayDate() {
+    const today = new Date();
+    const mm = String(today.getMonth() + 1).padStart(2, '0');
+    const dd = String(today.getDate()).padStart(2, '0');
+    return `${today.getFullYear()}-${mm}-${dd}`;
+  }
+
+  showRouteFork({ resetAll = false } = {}) {
+    if (resetAll) {
+      this.items = [];
+      this.tax = 0;
+      this.merchant = '';
+      this.receiptTax = 0;
+      this.receiptTotal = 0;
+      this.receiptDate = this.getTodayDate();
+      this.selectedCategory = 'Other';
+    }
+    this.showScreen('route');
+  }
+
   startManual() {
     if (!this.items.length) this.items = [];
     this.renderItems();
     this.showScreen('items', 1);
-    this.showAddItemModal();
+    if (!this.items.length) this.showAddItemModal();
   }
 
   // ═══════════════════════════════════════
@@ -1529,6 +1549,7 @@ class SnapLedger {
   // ═══════════════════════════════════════
 
   populatePersonalScreen() {
+    if (!this.receiptDate) this.receiptDate = this.getTodayDate();
     this.$('#personal-merchant').value = this.merchant;
     this.$('#personal-date').value = this.receiptDate;
     this.$('#personal-tax').value = this.receiptTax.toFixed(2);
