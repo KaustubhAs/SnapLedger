@@ -42,6 +42,8 @@ SnapLedger is a modern, serverless Progressive Web App (PWA) that serves as your
 2. **Scan:** Snap a photo of your receipt or enter the total manually.
 3. **Save:** Categorize the expense and instantly sync it to your cloud database.
 
+![Flow one](assets/SnapFairFlow1.jpg)
+
 ### Flow 2: Split a Bill with Friends
 1. 📸 **Scan:** Upload a photo of your bill or use your camera.
 2. 📝 **Review:** Edit the AI-detected items and prices if needed.
